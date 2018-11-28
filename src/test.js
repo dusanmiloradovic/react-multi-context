@@ -6,9 +6,12 @@ import MultiContext from "./index.js";
 class Test extends React.Component {
   render() {
     console.log(this.context);
+
+    return <div>a</div>;
+  }
+  componentDidMount() {
     let context1 = this.context.addInnerContext(":a");
     let context2 = this.context.addInnerContext(":b");
-    return <div>a</div>;
   }
 }
 
