@@ -1,50 +1,55 @@
 import React from "react";
 
 const RootContext = React.createContext({
-  addChildContext: contextId => {},
-  getChildContext: contextId => {},
-  setChildState: (contextId, state) => {}
+  addInnerContext: contextId => {},
+  getInnerContext: contextId => {},
+  setInnerState: (contextId, state) => {}
 });
 
 export default class extends React.Component {
   constructor(props) {
     super(props);
-    this.addChildContext = this.addChildContext.bind(this);
+    this.addInnerContext = this.addInnerContext.bind(this);
     this.state = {
-      childContexts: {},
-      addChildContext: this.addChildContext,
-      getChildContext: this.getChildContext,
-      setChildState: this.setChildState
+      innerContexts: {},
+      addInnerContext: this.addInnerContext,
+      getInnerContext: this.getInnerContext,
+      setInnerState: this.setInnerState
     };
   }
 
-  addChildContext(contextId) {
+  addInnerContext(contextId) {
+    let ex = this.getInnerContext(contextId);
+    if (ex) return ex;
     let ctx = React.createContext(null);
-    let st = { ...this.state.childContexts };
-    st.contextId = { context: ctx, state: null };
-    this.setState({ childContexts: st });
+    let st = { ...this.state.innerContexts };
+    st[contextId] = { context: ctx, state: null };
+    this.setState({ innerContexts: st });
     return ctx;
   }
 
-  getChildContext(contextId) {
-    return this.state.childContexts[contextId].context;
+  getInnerContext(contextId) {
+    return (
+      this.state.innerContexts[contextId] &&
+      this.state.innerContexts[contextId].context
+    );
   }
 
-  addProvider(childProvider, contextId) {
-    let PRV = this.getChildContext(contextId).Provider;
-    let childState = this.state.childContexts[contextId].state;
-    return <PRV value={childState}>{childProvider}</PRV>;
+  addProvider(innerProvider, contextId) {
+    let PRV = this.getInnerContext(contextId).Provider;
+    let innerState = this.state.innerContexts[contextId].state;
+    return <PRV value={innerState}>{innerProvider}</PRV>;
   }
 
-  setChildState(contextId, stateF) {
-    let st = { ...this.state.childContexts };
+  setInnerState(contextId, stateF) {
+    let st = { ...this.state.innerContexts };
     st.contextId.state = stateF(st.contextId.state);
-    this.setState({ childContexts: st });
+    this.setState({ innerContexts: st });
   }
 
   render() {
     let currProvider = this.props.children;
-    for (let cid in this.state.childContexts) {
+    for (let cid in this.state.innerContexts) {
       currProvider = this.addProvider(currProvider, cid);
     }
 

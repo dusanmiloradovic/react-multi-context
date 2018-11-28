@@ -4,7 +4,7 @@ import babel from "rollup-plugin-babel";
 import replace from "rollup-plugin-replace";
 
 export default {
-  input: "src/index.js",
+  input: "src/test.js",
   output: {
     file: "disttest/bundleweb.js",
     format: "iife",
