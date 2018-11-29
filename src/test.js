@@ -17,7 +17,6 @@ class Test extends React.Component {
     super(props);
   }
   render() {
-    console.log(this.context);
     const A = Context1 ? (
       <Context1.Consumer>{value => value}</Context1.Consumer>
     ) : (
@@ -57,6 +56,7 @@ let HOC = (rootContext, contextId) => {
   let Context = rootContext.addInnerContext(contextId);
   let kl = class extends React.Component {
     render() {
+      console.log("called render for " + contextId);
       return (
         <div>
           inner value for

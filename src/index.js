@@ -46,8 +46,6 @@ export default class extends React.Component {
   }
 
   setInnerState(contextId, stateF) {
-    console.log(this);
-    console.log(this.state);
     let st = { ...this.state.innerContexts };
     st[contextId].state = stateF(st[contextId].state);
     this.setState({ innerContexts: st });
