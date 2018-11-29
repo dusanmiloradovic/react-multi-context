@@ -9,11 +9,15 @@
 	"build": "rollup -c",
 	"buildweb": "rollup -c rollup.config.testweb.js"
     },
+    "repository": {
+	"type": "git",
+	"url": "https://github.com/dusanmiloradovic/react-multi-context.git"
+    },
     "keywords": [
 	"React",
 	"Context",
 	"Multiple",
-	"Redux"
+	"Dynamic"
     ],
     "author": "Dusan Miloradovic",
     "license": "MIT",
