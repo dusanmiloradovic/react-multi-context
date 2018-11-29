@@ -10,11 +10,15 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
     this.addInnerContext = this.addInnerContext.bind(this);
+    this.getInnerContext = this.getInnerContext.bind(this);
+    this.setInnerState = this.setInnerState.bind(this);
     this.state = {
       innerContexts: {},
-      addInnerContext: this.addInnerContext,
-      getInnerContext: this.getInnerContext,
-      setInnerState: this.setInnerState
+      root: {
+        addInnerContext: this.addInnerContext,
+        getInnerContext: this.getInnerContext,
+        setInnerState: this.setInnerState
+      }
     };
   }
 
@@ -42,8 +46,10 @@ export default class extends React.Component {
   }
 
   setInnerState(contextId, stateF) {
+    console.log(this);
+    console.log(this.state);
     let st = { ...this.state.innerContexts };
-    st.contextId.state = stateF(st.contextId.state);
+    st[contextId].state = stateF(st[contextId].state);
     this.setState({ innerContexts: st });
   }
 
@@ -54,7 +60,7 @@ export default class extends React.Component {
     }
 
     return (
-      <RootContext.Provider value={this.state}>
+      <RootContext.Provider value={this.state.root}>
         {currProvider}
       </RootContext.Provider>
     );
