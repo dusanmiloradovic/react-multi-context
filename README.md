@@ -3,7 +3,7 @@ If you want to use React Context to separate the state from components, it can b
 ## Installation
 
 ```sh
-npm install react-multi-context
+npm install react-multiple-contexts
 ```
 ## Use
 Example for functional components:

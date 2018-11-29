@@ -1,36 +1,36 @@
 {
-    "name": "react-multi-context",
-    "version": "1.0.0",
-    "description": "Multuple Context Utility",
-    "main": "distrollup/bundle.js",
-    "unpkg": "distrollup/bundleweb.js",
-    "scripts": {
-	"test": "echo \"Error: no test specified\" && exit 1",
-	"build": "rollup -c",
-	"buildweb": "rollup -c rollup.config.testweb.js"
-    },
-    "repository": {
-	"type": "git",
-	"url": "https://github.com/dusanmiloradovic/react-multi-context.git"
-    },
-    "keywords": [
-	"React",
-	"Context",
-	"Multiple",
-	"Dynamic"
-    ],
-    "author": "Dusan Miloradovic",
-    "license": "MIT",
-    "devDependencies": {
-	"@babel/core": "^7.1.6",
-	"@babel/preset-env": "^7.1.6",
-	"@babel/preset-react": "^7.0.0",
-	"react": "^16.6.3",
-	"react-dom": "^16.6.3",
-	"rollup": "^0.67.3",
-	"rollup-plugin-babel": "^4.0.3",
-	"rollup-plugin-commonjs": "^9.2.0",
-	"rollup-plugin-node-resolve": "^3.4.0",
-	"rollup-plugin-replace": "^2.1.0"
-    }
+			"name": "react-multiple-contexts",
+			"version": "1.0.0",
+			"description": "Multuple Context Utility",
+			"main": "distrollup/bundle.js",
+			"unpkg": "distrollup/bundleweb.js",
+			"scripts": {
+						"test": "echo \"Error: no test specified\" && exit 1",
+						"build": "rollup -c",
+						"buildweb": "rollup -c rollup.config.testweb.js"
+			},
+			"repository": {
+						"type": "git",
+						"url": "https://github.com/dusanmiloradovic/react-multi-context.git"
+			},
+			"keywords": [
+						"React",
+						"Context",
+						"Multiple",
+						"Dynamic"
+			],
+			"author": "Dusan Miloradovic",
+			"license": "MIT",
+			"devDependencies": {
+						"@babel/core": "^7.1.6",
+						"@babel/preset-env": "^7.1.6",
+						"@babel/preset-react": "^7.0.0",
+						"react": "^16.6.3",
+						"react-dom": "^16.6.3",
+						"rollup": "^0.67.3",
+						"rollup-plugin-babel": "^4.0.3",
+						"rollup-plugin-commonjs": "^9.2.0",
+						"rollup-plugin-node-resolve": "^3.4.0",
+						"rollup-plugin-replace": "^2.1.0"
+			}
 }
