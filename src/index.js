@@ -54,7 +54,7 @@ export default class extends React.Component {
 
   getInnerState(contextId) {
     return (
-      this.state.innserContexts[contextId] &&
+      this.state.innerContexts[contextId] &&
       this.state.innerContexts[contextId].state
     );
   }
