@@ -1,23 +1,51 @@
 # React Multi Context
-If you want to use React Context to separate the state from components, it can be challenging to manage contexts for the multiple data sources. If you store the data in one context, every update to the context, will re-render all the components. This small utility library will help you create the nested contexts dynamically.
+If you want to use React Context to separate the state from components, it can be challenging to manage contexts for the multiple data sources. If you store the data in one context, every update to the context will re-render all the components. This small utility library will help you create the nested contexts dynamically, and pull the data up in separate contexts.
 ## Installation
 
 ```sh
 npm install react-multiple-contexts
 ```
 ## Use
+
+MultiContexts exposes the root context with property _rootContext_. You use this to setup the context type for the top-level component:
+
+```js
+import MultiContext from 'react-multiple-contexts';
+
+TopLevelComp.contextType=MultiContext.rootContext;
+```
+To create the inner context, use the MultiContext function _addInnerContext_.
+It has only one parameter, the id of the inner context:
+
+```js
+    Context1 = this.context.addInnerContext(":a");
+```js
+
+Why we need the id? The whole idea of this library is to separate the data from the components, and lift it up in __separate__ contexts.
+When we need to update the context data, from inside our outside the component, we need the id. We do it with the root context function _setInnerState_:
+
+```js
+
+ <button onClick={ev => this.context.setInnerState(":b", incF)}>
+          :b
+ </button>
+```
+
+The first argument of this function is the context id. Another is the  state function, that takes the existing context state and produces the new one.
+
+
+
 Example for functional components:
 ```js
 import React from "react";
 import ReactDOM from "react-dom";
-import MultiContext from "react-multi-context";
+import MultiContext from "react-multiple-contexts";
 
 const incF = x => {
   if (!x) return 1;
   return x + 1;
 };
 
-/*Example for functional components*/
 let Context1 = null;
 let Context2 = null;
 
