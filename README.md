@@ -19,7 +19,7 @@ It has only one parameter, the id of the inner context:
 
 ```js
     Context1 = this.context.addInnerContext(":a");
-```js
+```
 
 Why we need the id? The whole idea of this library is to separate the data from the components, and lift it up in __separate__ contexts.
 When we need to update the context data, from inside our outside the component, we need the id. We do it with the root context function _setInnerState_:
