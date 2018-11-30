@@ -12,6 +12,7 @@ export default class extends React.Component {
     this.addInnerContext = this.addInnerContext.bind(this);
     this.getInnerContext = this.getInnerContext.bind(this);
     this.setInnerState = this.setInnerState.bind(this);
+    this.getInnerState = this.getInnerState.bind(this);
     this.state = {
       innerContexts: {},
       root: {
@@ -49,6 +50,13 @@ export default class extends React.Component {
     let st = { ...this.state.innerContexts };
     st[contextId].state = stateF(st[contextId].state);
     this.setState({ innerContexts: st });
+  }
+
+  getInnerState(contextId) {
+    return (
+      this.state.innserContexts[contextId] &&
+      this.state.innerContexts[contextId].state
+    );
   }
 
   render() {
