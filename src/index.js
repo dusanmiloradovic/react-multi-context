@@ -3,7 +3,8 @@ import React from "react";
 const RootContext = React.createContext({
   addInnerContext: contextId => {},
   getInnerContext: contextId => {},
-  setInnerState: (contextId, state) => {}
+  setInnerState: (contextId, state) => {},
+  getInnerState: contextId => {}
 });
 
 export default class extends React.Component {
@@ -18,7 +19,8 @@ export default class extends React.Component {
       root: {
         addInnerContext: this.addInnerContext,
         getInnerContext: this.getInnerContext,
-        setInnerState: this.setInnerState
+        setInnerState: this.setInnerState,
+        getInnerState: this.getInnerState
       }
     };
   }
