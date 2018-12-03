@@ -26,12 +26,17 @@ export default class extends React.Component {
   }
 
   addInnerContext(contextId) {
-    let ex = this.getInnerContext(contextId);
-    if (ex) return ex;
     let ctx = React.createContext(null);
-    let st = { ...this.state.innerContexts };
-    st[contextId] = { context: ctx, state: null };
-    this.setState({ innerContexts: st });
+    this.setState((state, props) => {
+      let ex =
+        state.innerContexts[contextId] &&
+        state.innerContexts[contextId].context;
+      if (ex) return {};
+
+      let st = { ...state.innerContexts };
+      st[contextId] = { context: ctx, state: null };
+      return { innerContexts: st };
+    });
     return ctx;
   }
 
@@ -49,9 +54,11 @@ export default class extends React.Component {
   }
 
   setInnerState(contextId, stateF) {
-    let st = { ...this.state.innerContexts };
-    st[contextId].state = stateF(st[contextId].state);
-    this.setState({ innerContexts: st });
+    this.setState((state, props) => {
+      let st = { ...state.innerContexts };
+      st[contextId].state = stateF(st[contextId].state);
+      return { innerContexts: st };
+    });
   }
 
   getInnerState(contextId) {
