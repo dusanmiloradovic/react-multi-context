@@ -52,8 +52,7 @@ Test.contextType = MultiContext.rootContext;
 
 /*Example for "full" components */
 
-let HOC = (rootContext, contextId) => {
-  let Context = rootContext.addInnerContext(contextId);
+let HOC = (rootContext, contextId, context) => {
   let kl = class extends React.Component {
     render() {
       console.log("called render for " + contextId);
@@ -69,20 +68,34 @@ let HOC = (rootContext, contextId) => {
       );
     }
   };
-  kl.contextType = Context;
+  kl.contextType = context;
   return kl;
 };
 
 class Test2 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { contextC: null, contextD: null };
+  }
   render() {
-    let C = HOC(this.context, ":c");
-    let D = HOC(this.context, ":d");
+    let C = this.state.contextC
+      ? HOC(this.context, ":c", this.state.contextC)
+      : () => <div />;
+    let D = this.state.contextD
+      ? HOC(this.context, ":d", this.state.contextD)
+      : () => <div />;
     return (
       <div>
         <C />
         <D />
       </div>
     );
+  }
+  componentDidMount() {
+    this.setState({
+      contextC: this.context.addInnerContext(":c"),
+      contextD: this.context.addInnerContext(":d")
+    });
   }
 }
 
