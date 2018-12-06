@@ -3,6 +3,7 @@ import React from "react";
 const RootContext = React.createContext({
   addInnerContext: contextId => {},
   getInnerContext: contextId => {},
+  removeInnerContext: contextId => {},
   setInnerState: (contextId, state) => {},
   getInnerState: contextId => {}
 });
@@ -14,6 +15,8 @@ export default class extends React.Component {
     this.getInnerContext = this.getInnerContext.bind(this);
     this.setInnerState = this.setInnerState.bind(this);
     this.getInnerState = this.getInnerState.bind(this);
+    this.removeInnerContext = this.removeInnerContext.bind(this);
+
     this.state = {
       innerContexts: {},
       root: {
@@ -38,6 +41,15 @@ export default class extends React.Component {
       return { innerContexts: st };
     });
     return ctx;
+  }
+
+  removeInnerContext(contextId) {
+    this.setState((state, props) => {
+      if (!state.innetContexts[contextId]) return null;
+      let st = { ...state.innerContexts };
+      delete st[contextId];
+      return { innerContexts: st };
+    });
   }
 
   getInnerContext(contextId) {
