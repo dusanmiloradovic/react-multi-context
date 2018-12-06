@@ -22,6 +22,7 @@ export default class extends React.Component {
       root: {
         addInnerContext: this.addInnerContext,
         getInnerContext: this.getInnerContext,
+	removeInnerContext:this.removeInnerContext,
         setInnerState: this.setInnerState,
         getInnerState: this.getInnerState
       }
