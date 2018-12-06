@@ -45,7 +45,7 @@ export default class extends React.Component {
 
   removeInnerContext(contextId) {
     this.setState((state, props) => {
-      if (!state.innetContexts[contextId]) return null;
+      if (!state.innerContexts[contextId]) return null;
       let st = { ...state.innerContexts };
       delete st[contextId];
       return { innerContexts: st };
