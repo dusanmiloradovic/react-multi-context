@@ -9,24 +9,19 @@ const incF = x => {
 };
 
 /*Example for functional components*/
-let Context1 = null;
-let Context2 = null;
+//let Context1 = null;
+//let Context2 = null;
+let Context1 = React.createContext(null);
+let Context2 = React.createContext(null);
 
 class Test extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
-    const A = Context1 ? (
-      <Context1.Consumer>{value => value}</Context1.Consumer>
-    ) : (
-      <div />
-    );
-    const B = Context2 ? (
-      <Context2.Consumer>{value => value}</Context2.Consumer>
-    ) : (
-      <div />
-    );
+    const A = <Context1.Consumer>{value => value}</Context1.Consumer>;
+    const B = <Context2.Consumer>{value => value}</Context2.Consumer>;
+
     return (
       <div>
         :a
@@ -43,8 +38,13 @@ class Test extends React.Component {
     );
   }
   componentDidMount() {
-    Context1 = this.context.addInnerContext(":a");
-    Context2 = this.context.addInnerContext(":b");
+    //    Context1 = this.context.addInnerContext(":a");
+    //  Context2 = this.context.addInnerContext(":b");
+    //to avoid redraw, we add multiple contexts at once.
+    let ctxts = this.context.addMultipleInnerContexts(
+      [":a", ":b"],
+      [Context1, Context2]
+    );
   }
 }
 
@@ -52,7 +52,7 @@ Test.contextType = MultiContext.rootContext;
 
 /*Example for "full" components */
 
-let HOC = (rootContext, contextId, context) => {
+let HOC = (rootContext, contextId, Context) => {
   let kl = class extends React.Component {
     render() {
       console.log("called render for " + contextId);
@@ -68,22 +68,19 @@ let HOC = (rootContext, contextId, context) => {
       );
     }
   };
-  kl.contextType = context;
+  kl.contextType = Context;
   return kl;
 };
 
+const contextC = React.createContext(null);
+const contextD = React.createContext(null);
 class Test2 extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { contextC: null, contextD: null };
   }
   render() {
-    let C = this.state.contextC
-      ? HOC(this.context, ":c", this.state.contextC)
-      : () => <div />;
-    let D = this.state.contextD
-      ? HOC(this.context, ":d", this.state.contextD)
-      : () => <div />;
+    let C = HOC(this.context, ":c", contextC);
+    let D = HOC(this.context, ":d", contextD);
     return (
       <div>
         <C />
@@ -92,10 +89,7 @@ class Test2 extends React.Component {
     );
   }
   componentDidMount() {
-    this.setState({
-      contextC: this.context.addInnerContext(":c"),
-      contextD: this.context.addInnerContext(":d")
-    });
+    this.context.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
   }
 }
 
@@ -109,8 +103,8 @@ class App extends React.Component {
         <div />
         <Test />
         Full components
-        <div />
         <Test2 />
+        <div />
       </MultiContext>
     );
   }

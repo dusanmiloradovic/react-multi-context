@@ -15,7 +15,7 @@ import MultiContext from 'react-multiple-contexts';
 TopLevelComp.contextType=MultiContext.rootContext;
 ```
 To create the inner context, use the MultiContext function _addInnerContext_.
-It has only one parameter, the id of the inner context:
+It has only one parameter, the id of the inner context, and the optional second parameter if we want to pass the existing context:
 
 ```js
     Context1 = this.context.addInnerContext(":a");
@@ -31,7 +31,15 @@ When we need to update the context data, from inside our outside the component, 
  </button>
 ```
 
+
 The first argument of this function is the context id. Another is the  state function, that takes the existing context state and produces the new one.
+
+
+Every adding of the new context to the provider causes the redraw. To avoid this, we can add the multiple inner contexts at once:
+
+```js
+this.context.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
+```
 
 
 
@@ -46,24 +54,17 @@ const incF = x => {
   return x + 1;
 };
 
-let Context1 = null;
-let Context2 = null;
+let Context1 = React.createContext(null);
+let Context2 = React.createContext(null);
 
 class Test extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
-    const A = Context1 ? (
-      <Context1.Consumer>{value => value}</Context1.Consumer>
-    ) : (
-      <div />
-    );
-    const B = Context2 ? (
-      <Context2.Consumer>{value => value}</Context2.Consumer>
-    ) : (
-      <div />
-    );
+    const A = <Context1.Consumer>{value => value}</Context1.Consumer>;
+    const B = <Context2.Consumer>{value => value}</Context2.Consumer>;
+
     return (
       <div>
         :a
@@ -80,8 +81,13 @@ class Test extends React.Component {
     );
   }
   componentDidMount() {
-    Context1 = this.context.addInnerContext(":a");
-    Context2 = this.context.addInnerContext(":b");
+    //    Context1 = this.context.addInnerContext(":a");
+    //  Context2 = this.context.addInnerContext(":b");
+    //to avoid redraw, we add multiple contexts at once.
+    let ctxts = this.context.addMultipleInnerContexts(
+      [":a", ":b"],
+      [Context1, Context2]
+    );
   }
 }
 
@@ -106,8 +112,7 @@ window.onload = _ => {
 For regular React Components:
 
 ```js
-let HOC = (rootContext, contextId) => {
-  let Context = rootContext.addInnerContext(contextId);
+let HOC = (rootContext, contextId, Context) => {
   let kl = class extends React.Component {
     render() {
       console.log("called render for " + contextId);
@@ -127,10 +132,15 @@ let HOC = (rootContext, contextId) => {
   return kl;
 };
 
-class Test extends React.Component {
+const contextC = React.createContext(null);
+const contextD = React.createContext(null);
+class Test2 extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
-    let C = HOC(this.context, ":c");
-    let D = HOC(this.context, ":d");
+    let C = HOC(this.context, ":c", contextC);
+    let D = HOC(this.context, ":d", contextD);
     return (
       <div>
         <C />
@@ -138,7 +148,10 @@ class Test extends React.Component {
       </div>
     );
   }
+  componentDidMount() {
+    this.context.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
+  }
 }
 
-Test.contextType = MultiContext.rootContext;
+Test2.contextType = MultiContext.rootContext;
 ```
