@@ -120,11 +120,16 @@ export default class extends React.Component {
       currProvider = this.addProvider(currProvider, cid);
     }
 
-    return (
-      <RootContext.Provider value={this.state.root}>
-        {currProvider}
-      </RootContext.Provider>
-    );
+    /*
+Important! 
+If you use this library to create another library that will share the context with the application, you need to provide the rootContext as a param.
+The reason is that it is not possible to share the variables between the modules in WebPack, so the RootContext variable provider will not give any value in your lib
+*/
+    let Provider = this.props.rootContext
+      ? this.props.rootContext.Provider
+      : RootContext.Provider;
+
+    return <Provider value={this.state.root}>{currProvider}</Provider>;
   }
 
   get rootContext() {
