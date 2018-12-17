@@ -1,14 +1,27 @@
 import React from "react";
 
-const RootContext = React.createContext({
-  addInnerContext: contextId => {},
-  getInnerContext: contextId => {},
-  addMultipleInnerContexts: contextIds => {},
-  removeMultipleInnerContexts: contextIds => {},
-  removeInnerContext: contextId => {},
-  setInnerState: (contextId, state) => {},
-  getInnerState: contextId => {}
-});
+let rootContext = null;
+
+const createRootContext = () => {
+  return React.createContext({
+    addInnerContext: contextId => {},
+    getInnerContext: contextId => {},
+    addMultipleInnerContexts: contextIds => {},
+    removeMultipleInnerContexts: contextIds => {},
+    removeInnerContext: contextId => {},
+    setInnerState: (contextId, state) => {},
+    getInnerState: contextId => {}
+  });
+};
+
+const getRootContext = () => {
+  if (rootContext) {
+    return rootContext;
+  }
+  console.log("creating root context");
+  rootContext = createRootContext();
+  return rootContext;
+};
 
 export default class extends React.Component {
   constructor(props) {
@@ -127,16 +140,16 @@ The reason is that it is not possible to share the variables between the modules
 */
     let Provider = this.props.rootContext
       ? this.props.rootContext.Provider
-      : RootContext.Provider;
+      : getRootContext().Provider;
 
     return <Provider value={this.state.root}>{currProvider}</Provider>;
   }
 
   get rootContext() {
-    return RootContext;
+    return getRootContext();
   }
 
   static get rootContext() {
-    return RootContext;
+    return getRootContext();
   }
 }
