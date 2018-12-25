@@ -155,3 +155,24 @@ class Test2 extends React.Component {
 
 Test2.contextType = MultiContext.rootContext;
 ```
+
+### ContextPool
+
+If you have to completely avoid re-draws due to the adding of inner contexts, you can use the _pool_ of contexts, __ContextPool__ class. It is a drop-in replacement for the MultiContext class. It will create the pool of contexts with the initially defined size that can grow on demand. Internally contexts will not be destroyed when __removeContext__ is called, they will be returned to the pool instead
+
+```js
+import {ContextPool} from 'react-multiple-contexts';
+
+
+
+render(){
+    return (
+      <ContextPool rootContext={rootContext} initialSize={10} minimumFree={3}>
+        <Test />
+      </ContextPool>
+    );
+}
+```
+
+All the props are mandatory: __rootContext is an externally defined rootContext, __intialSize__ is the number of contexts initially created, __minimumFree__ is the minum of the non-occupied contexts in the pool. Once the limuit is reached, new contexts will be added to the pool
+

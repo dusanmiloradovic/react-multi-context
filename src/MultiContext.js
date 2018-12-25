@@ -67,7 +67,10 @@ export default class extends React.Component {
         let k = contextIds[j];
         let ex = state.innerContexts[k] && state.innerContexts[k].context;
         if (ex) continue;
-        let ctx = optContexts[j] ? optContexts[j] : React.createContext(null);
+        let ctx =
+          optContexts && optContexts[j]
+            ? optContexts[j]
+            : React.createContext(null);
         st[k] = { context: ctx, state: null };
         contexts[k] = ctx;
       }

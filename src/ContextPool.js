@@ -67,15 +67,19 @@ export class ContextPool extends React.Component {
       this.ctx.addMultipleInnerContexts(newIds, newContexts);
     }
   }
-  addInnerContext(contextId) {
+  addInnerContext(contextId, optContext) {
     if (!this.ctx) {
-      let retCtx = React.createContext(null);
+      let retCtx = optContext ? optContext : React.createContext(null);
       this.pending[contextId] = retCtx;
       return retCtx;
     }
     this.checkFree();
     let innerId = this.free.splice(0, 1)[0]; //remove first free
     this.occupied[contextId] = innerId;
+    if (optContext) {
+      //the free context is not used, replace it with the outside created one
+      this.innerContexts[innerId] = optContext;
+    }
     return this.innerContexts[innerId];
   }
   getInnerContext(contextId) {
@@ -93,11 +97,16 @@ export class ContextPool extends React.Component {
   getInnerState(contextId) {
     return this.ctx.getInnerState(this.occupied[contextId]);
   }
-  addMultipleInnerContexts(contextIds) {
+  addMultipleInnerContexts(contextIds, optContexts) {
     let rez = [];
-    for (let j of contextIds) {
+    for (let i = 0; i < contextIds.length; i++) {
+      let j = contextIds[i];
       //looping is enough, there will be no redraws
-      rez.push(this.addInnerContext(j));
+      if (optContexts && optContexts[i]) {
+        rez.push(this.addInnerContext(j, optContexts[i]));
+      } else {
+        rez.push(this.addInnerContext(j));
+      }
     }
     return rez;
   }
