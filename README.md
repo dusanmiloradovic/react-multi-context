@@ -51,7 +51,7 @@ rc.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
 
 
 
-Example:
+[Example:](https://codesandbox.io/s/heuristic-lumiere-eyzbn)
 
 ```js
 import React, { useContext, useEffect } from "react";
