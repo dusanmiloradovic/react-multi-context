@@ -6,19 +6,27 @@ If you want to use React Context to separate the state from components, it can b
 npm install react-multiple-contexts
 ```
 ## Use
-
-MultiContexts exposes the root context with property _rootContext_. You use this to setup the context type for the top-level component:
+You need to create a root React Context and pass it as a parameter to MultiContext.
+You will use this context to add inner Contexts, and to set their values.
 
 ```js
 import MultiContext from 'react-multiple-contexts';
+const rootContext = React.createContext(null);
+...
 
-TopLevelComp.contextType=MultiContext.rootContext;
+export default () => (
+  <MultiContext rootContext={rootContext}>
+    <App />
+  </MultiContext>
+);
 ```
 To create the inner context, use the MultiContext function _addInnerContext_.
 It has only one parameter, the id of the inner context, and the optional second parameter if we want to pass the existing context:
 
 ```js
-    Context1 = this.context.addInnerContext(":a");
+    const rc = useContext(rootContext);
+    ...
+    Context1 = rc.addInnerContext(":a");
 ```
 
 Why we need the id? The whole idea of this library is to separate the data from the components, and lift it up in __separate__ contexts.
@@ -26,8 +34,8 @@ When we need to update the context data, from inside our outside the component, 
 
 ```js
 
- <button onClick={ev => this.context.setInnerState(":b", incF)}>
-          :b
+ <button onClick={ev => rc.setInnerState(":b", x=>x?x+1:2)}>
+    :b
  </button>
 ```
 
