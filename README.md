@@ -43,136 +43,68 @@ this.context.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
 
 
 
-Example for functional components:
+Example:
+
 ```js
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useContext, useEffect } from "react";
 import MultiContext from "react-multiple-contexts";
 
-const incF = x => {
-  if (!x) return 1;
-  return x + 1;
+const rootContext = React.createContext(null);
+const context1 = React.createContext(null);
+const context2 = React.createContext(null);
+
+const B = () => {
+  const value1 = useContext(context1);
+  return (
+    <div>
+      B=
+      {value1}
+    </div>
+  );
 };
 
-let Context1 = React.createContext(null);
-let Context2 = React.createContext(null);
-
-class Test extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    const A = <Context1.Consumer>{value => value}</Context1.Consumer>;
-    const B = <Context2.Consumer>{value => value}</Context2.Consumer>;
-
-    return (
-      <div>
-        :a
-        {A}
-        :b
-        {B}
-        <button onClick={ev => this.context.setInnerState(":a", incF)}>
-          :a
-        </button>
-        <button onClick={ev => this.context.setInnerState(":b", incF)}>
-          :b
-        </button>
-      </div>
-    );
-  }
-  componentDidMount() {
-    //    Context1 = this.context.addInnerContext(":a");
-    //  Context2 = this.context.addInnerContext(":b");
-    //to avoid redraw, we add multiple contexts at once.
-    let ctxts = this.context.addMultipleInnerContexts(
-      [":a", ":b"],
-      [Context1, Context2]
-    );
-  }
-}
-
-Test.contextType = MultiContext.rootContext;
-
-class App extends React.Component {
-  render() {
-    return (
-      <MultiContext>
-        <Test/>
-      </MultiContext>
-    );
-  }
-}
-
-window.onload = _ => {
-  ReactDOM.render(<App />, document.getElementById("root"));
+const C = () => {
+  const value2 = useContext(context2);
+  return (
+    <div>
+      C=
+      {value2}
+    </div>
+  );
 };
 
-```
-
-For regular React Components:
-
-```js
-let HOC = (rootContext, contextId, Context) => {
-  let kl = class extends React.Component {
-    render() {
-      console.log("called render for " + contextId);
-      return (
-        <div>
-          inner value for
-          {contextId}
-          {this.context}
-          <button onClick={ev => rootContext.setInnerState(contextId, incF)}>
-            {contextId}
-          </button>
-        </div>
-      );
-    }
-  };
-  kl.contextType = Context;
-  return kl;
-};
-
-const contextC = React.createContext(null);
-const contextD = React.createContext(null);
-class Test2 extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    let C = HOC(this.context, ":c", contextC);
-    let D = HOC(this.context, ":d", contextD);
-    return (
-      <div>
-        <C />
-        <D />
-      </div>
-    );
-  }
-  componentDidMount() {
-    this.context.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
-  }
+function App() {
+  const rc = useContext(rootContext);
+  useEffect(() => {
+    rc.addMultipleInnerContexts([":b", ":c"], [context1, context2]);
+  });
+  return (
+    <div className="App">
+      <B />
+      <C />
+      <button
+        onClick={() =>
+          rc.setInnerState(":b", value => {
+            console.log("current value " + value);
+            return value ? value + 1 : 1;
+          })
+        }
+      >
+        Increase B
+      </button>
+      <button
+        onClick={() => rc.setInnerState(":c", value => (value ? value + 2 : 1))}
+      >
+        Increase C
+      </button>
+    </div>
+  );
 }
 
-Test2.contextType = MultiContext.rootContext;
+export default () => (
+  <MultiContext rootContext={rootContext}>
+    <App />
+  </MultiContext>
+);
 ```
-
-### ContextPool
-
-If you have to completely avoid re-draws due to the adding of inner contexts, you can use the _pool_ of contexts, __ContextPool__ class. It is a drop-in replacement for the MultiContext class. It will create the pool of contexts with the initially defined size that can grow on demand. Internally contexts will not be destroyed when __removeContext__ is called, they will be returned to the pool instead
-
-```js
-import {ContextPool} from 'react-multiple-contexts';
-
-
-
-render(){
-    return (
-      <ContextPool rootContext={rootContext} initialSize={10} minimumFree={3}>
-        <Test />
-      </ContextPool>
-    );
-}
-```
-
-All the props are mandatory: __rootContext is an externally defined rootContext, __intialSize__ is the number of contexts initially created, __minimumFree__ is the minum of the non-occupied contexts in the pool. Once the limuit is reached, new contexts will be added to the pool
 
