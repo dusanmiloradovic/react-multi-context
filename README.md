@@ -46,7 +46,7 @@ The first argument of this function is the context id. Another is the  state fun
 Every adding of the new context to the provider causes the redraw. To avoid this, we can add the multiple inner contexts at once:
 
 ```js
-this.context.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
+rc.addMultipleInnerContexts([":c", ":d"], [contextC, contextD]);
 ```
 
 
