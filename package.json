@@ -1,6 +1,6 @@
 {
 			"name": "react-multiple-contexts",
-			"version": "1.0.16",
+			"version": "1.0.17",
 			"description": "Multuple Context Utility",
 			"main": "distrollup/bundle.js",
 			"unpkg": "distrollup/bundleweb.js",
