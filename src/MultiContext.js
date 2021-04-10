@@ -4,13 +4,13 @@ let rootContext = null;
 
 const createRootContext = () => {
   return React.createContext({
-    addInnerContext: contextId => {},
-    getInnerContext: contextId => {},
-    addMultipleInnerContexts: contextIds => {},
-    removeMultipleInnerContexts: contextIds => {},
-    removeInnerContext: contextId => {},
+    addInnerContext: (contextId) => {},
+    getInnerContext: (contextId) => {},
+    addMultipleInnerContexts: (contextIds) => {},
+    removeMultipleInnerContexts: (contextIds) => {},
+    removeInnerContext: (contextId) => {},
     setInnerState: (contextId, state) => {},
-    getInnerState: contextId => {}
+    getInnerState: (contextId) => {},
   });
 };
 
@@ -45,8 +45,8 @@ export default class extends React.Component {
         setInnerState: this.setInnerState,
         getInnerState: this.getInnerState,
         addMultipleInnerContexts: this.addMultipleInnerContexts,
-        removeMultipleInnerContexts: this.removeMultipleInnerContexts
-      }
+        removeMultipleInnerContexts: this.removeMultipleInnerContexts,
+      },
     };
   }
   removeMultipleInnerContexts(contextIds) {
@@ -118,6 +118,9 @@ export default class extends React.Component {
   setInnerState(contextId, stateF) {
     this.setState((state, props) => {
       let st = { ...state.innerContexts };
+      if (!st || !st[contextId]) {
+        return { innerContexts: {} };
+      }
       st[contextId].state = stateF(st[contextId].state);
       return { innerContexts: st };
     });
